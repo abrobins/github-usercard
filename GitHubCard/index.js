@@ -15,15 +15,45 @@
 //   .catch((err) => {
 //   console.log('You hit an error; ', err);
 // })
+const addCard = document.querySelector(".cards");
 
-axios
-  .get("https://api.github.com/users/abrobins")
-  .then(response => {
-    console.log(response);
-  })
-  .catch(err => {
-    console.log("You hit an error: ", err);
-  });
+const followersArray = [
+  "abrobins",
+  "cscori",
+  "april5622",
+  "mlucky518",
+  "tlewandowski18",
+  "julisadiego",
+  "sophiasagan"
+];
+
+followersArray.forEach(item => {
+  axios
+    .get("https://api.github.com/users/" + item)
+    .then(response => {
+      // console.log(response);
+
+      const devInfoCard = createCard(response);
+      console.log(devInfoCard);
+      addCard.appendChild(devInfoCard);
+    })
+    .catch(err => {
+      console.log("You hit an error: ", err);
+    });
+});
+
+// axios
+//   .get("https://api.github.com/users/abrobins")
+//   .then(response => {
+//     // console.log(response);
+
+//     const devInfoCard = createCard(response);
+//     console.log(devInfoCard);
+//     addCard.appendChild(devInfoCard);
+//   })
+//   .catch(err => {
+//     console.log("You hit an error: ", err);
+//   });
 
 /* Step 2: Inspect and study the data coming back, this is YOUR 
    github info! You will need to understand the structure of this 
@@ -45,8 +75,6 @@ axios
           Using that array, iterate over it, requesting data for each user, creating a new card for each
           user, and adding that card to the DOM.
 */
-
-const followersArray = [];
 
 /* Step 3: Create a function that accepts a single object as its only argument,
           Using DOM methods and properties, create a component that will return the following DOM element:
@@ -89,12 +117,28 @@ function createCard(element) {
   newHeading.textContent = element.data.name;
   newUser.classList.add("username");
   newUser.textContent = element.data.login;
-  newLocation.textContent = element.data.location;
-  newProfile.textContent = "Profile:";
-  newProfileLink.src = element.data.html_url;
-  newFollowers.textContent = element.data.followers;
-  newFollowing.textContent = element.data.following;
-  (newBio.textContent = "Bio: "), element.data.bio;
+  newLocation.textContent = "Location: " + element.data.location;
+  newProfile.textContent = "Profile: ";
+  newProfileLink.setAttribute("href", `${element.data.html_url}`);
+  const rawLink = document.createTextNode(element.data.html_url);
+  newProfileLink.appendChild(rawLink);
+  // '<a href="' + element.data.html_url + '">' + element.data.html_url + "</a>";
+  newFollowers.textContent = "Followers: " + element.data.followers;
+  newFollowing.textContent = "Following: " + element.data.following;
+  newBio.textContent = "Bio: " + element.data.bio;
+
+  newCard.appendChild(newImg);
+  newCard.appendChild(newClassInfo);
+  newClassInfo.appendChild(newHeading);
+  newClassInfo.appendChild(newUser);
+  newClassInfo.appendChild(newLocation);
+  newClassInfo.appendChild(newProfile);
+  newProfile.appendChild(newProfileLink);
+  newClassInfo.appendChild(newFollowers);
+  newClassInfo.appendChild(newFollowing);
+  newClassInfo.appendChild(newBio);
+
+  return newCard;
 }
 
 /* List of LS Instructors Github username's: 
