@@ -27,20 +27,41 @@ const followersArray = [
   "sophiasagan"
 ];
 
-followersArray.forEach(item => {
-  axios
-    .get("https://api.github.com/users/" + item)
-    .then(response => {
-      // console.log(response);
+automatedFollowers = [];
+axios
+  .get("https://api.github.com/users/abrobins/followers")
+  .then(response => {
+    //  for (let i = 0; i < response.data.length; i++) {
+    // console.log(response);
+    const followerList = response.data;
+    console.log(followerList);
 
-      const devInfoCard = createCard(response);
-      console.log(devInfoCard);
-      addCard.appendChild(devInfoCard);
-    })
-    .catch(err => {
-      console.log("You hit an error: ", err);
+    followerList.forEach(item => {
+      //automatedFollowers.forEach(item => {
+      axios
+        .get(item.url)
+        .then(response => {
+          // console.log(response);
+          console.log(response);
+          const devInfoCard = createCard(response);
+          console.log(devInfoCard);
+          addCard.appendChild(devInfoCard);
+        })
+        .catch(err => {
+          console.log("You hit an error: ", err);
+        });
     });
-});
+    // }
+    //  console.log(automatedFollowers);
+    // console.log(automatedFollowers);
+    // console.log(response.data[0].login);
+    // automatedFollowers = Object.values(response.data.login);
+    // console.log("These are my followers:", automatedFollowers);
+  })
+  .catch(err => {
+    console.log("You hit an error with the followers code: ", err);
+  });
+console.log(automatedFollowers);
 
 // axios
 //   .get("https://api.github.com/users/abrobins")
@@ -137,7 +158,7 @@ function createCard(element) {
   newClassInfo.appendChild(newFollowers);
   newClassInfo.appendChild(newFollowing);
   newClassInfo.appendChild(newBio);
-
+  console.log(newCard);
   return newCard;
 }
 
